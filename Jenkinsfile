@@ -6,7 +6,6 @@ pipeline {
         DOCKERHUB_CREDENTIALS_ID = 'Docker_HUB'
         DOCKERHUB_REPO = 'mimoosamona/temperature_converter_graphic'
         DOCKER_IMAGE_TAG = 'latest'
-        DOCKER_CLI_CONTEXT = ''
     }
 
     tools {
@@ -44,17 +43,26 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} ."
-                    } else {
-                        bat "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} ."
-                    }
-                }
-            }
-        }
+       stage('Push Docker Image to Docker Hub') {
+           steps {
+               withCredentials([usernamePassword(credentialsId: 'Docker_HUB', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                   script {
+                       if (isUnix()) {
+                           sh """
+                               echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+                               docker push ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}
+                           """
+                       } else {
+                           bat """
+                               echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                               docker push ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}
+                           """
+                       }
+                   }
+               }
+           }
+       }
+
 
         stage('Push Docker Image to Docker Hub') {
             steps {
