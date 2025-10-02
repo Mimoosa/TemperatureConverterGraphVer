@@ -1,30 +1,22 @@
 pipeline {
     agent any
-    tools{
-        maven 'Maven3'
+     environment {
+                    PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
 
-    }
-
-    environment {
-        PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
-        DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
-        DOCKER_IMAGE = 'amirdirin/javafx_with_db2'
-        DOCKER_TAG = 'latest'
-    }
-
-    stages {
-        stage('Setup Maven') {
-            steps {
-                script {
-                    def mvnHome = tool name: 'Maven3', type: 'maven'
-                    env.PATH = "${mvnHome}/bin:${env.PATH}"
+                    // Define Docker Hub credentials ID
+                    DOCKERHUB_CREDENTIALS_ID = 'Docker_HUB'
+                    // Define Docker Hub repository name
+                    DOCKERHUB_REPO = 'mimoosamona/temperature_converter_graphic'
+                    // Define Docker image tag
+                    DOCKER_IMAGE_TAG = 'latest'
                 }
-            }
+        tools{
+            maven 'MAVEN_HOME'
         }
 
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/ADirin/javafx_with_mariadb.git'
+                git branch: 'main', url: 'https://github.com/Mimoosa/TemperatureConverterGraphVer.git'
             }
         }
 
