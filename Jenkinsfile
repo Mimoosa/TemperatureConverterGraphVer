@@ -6,6 +6,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS_ID = 'Docker_HUB'
         DOCKERHUB_REPO = 'mimoosamona/temperature_converter_graphic'
         DOCKER_IMAGE_TAG = 'latest'
+        DOCKER_CLI_CONTEXT = ''
     }
 
     tools {
